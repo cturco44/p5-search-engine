@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Stop on errors, print commands
+set -Eeuo pipefail
+set -x
+
+# Activate Python virtual environment
+python3 -m venv env
+set +u
+source env/bin/activate
+set -u
+
+# Tell pip to write to a different tmp directory
+mkdir -p tmp
+export TMPDIR=tmp
+
+# Install back end
+pip install -r index/requirements.txt
+pip install -e index
+pip install -r search/requirements.txt
+pip install -e search
+
+# Install front end
+npm install .
+
+# Install the hadoop implementation
+pushd $VIRTUAL_ENV/bin
+ln -sf ../../tests/utils/hadoop.py hadoop
+popd

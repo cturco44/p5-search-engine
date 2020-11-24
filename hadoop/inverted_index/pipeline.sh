@@ -25,7 +25,18 @@ hadoop \
   -input input \
   -output output_test \
   -mapper ./map0.py \
-  -reducer ./reduce0.py
+  -reducer ./reduce0.py \
+
+# Job 1
+rm -rf small_output
+# TODO: CHANGE SMALL_INPUT TO INPUT
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input small_input \
+  -output small_output \
+  -mapper ./map1.py \
+  -reducer ./reduce1.py
+
 
 
 
@@ -33,9 +44,9 @@ hadoop \
 # hadoop \
 #   jar ../hadoop-streaming-2.7.2.jar \
 #   -input input \
-#   -output output1 \
-#   -mapper ./somemap.py \
-#   -reducer ./somereduce.py \
+#   -output output \
+#   -mapper ./map1.py \
+#   -reducer ./reduce1.py \
 
 # Remove second output directory, if it exists
 # rm -rf output2

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Map 1."""
+"""Map 1 outputs csv as <doc_id> <doc_title + doc_body>."""
 
 import sys
 import re

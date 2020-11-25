@@ -28,33 +28,20 @@ hadoop \
   -reducer ./reduce0.py \
 
 # Job 1
-rm -rf small_output
+rm -rf small_output1
 # TODO: CHANGE SMALL_INPUT TO INPUT
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
   -input small_input \
-  -output small_output \
+  -output small_output1 \
   -mapper ./map1.py \
-  -reducer ./reduce1.py
+  -reducer ./reduce1.py \
 
+rm -rf small_output2
 
-
-
-# Run first MapReduce job
-# hadoop \
-#   jar ../hadoop-streaming-2.7.2.jar \
-#   -input input \
-#   -output output \
-#   -mapper ./map1.py \
-#   -reducer ./reduce1.py \
-
-# Remove second output directory, if it exists
-# rm -rf output2
-
-# Run second MapReduce job
-# hadoop \
-#   jar hadoop-streaming-2.7.2.jar \
-#   -input output1 \
-#   -output output2 \
-#   -mapper ./somemap.py \
-#   -reducer ./somereduce.py
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input small_output1 \
+  -output small_output2 \
+  -mapper ./map2.py \
+  -reducer ./reduce2.py

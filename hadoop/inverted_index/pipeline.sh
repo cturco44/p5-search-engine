@@ -14,22 +14,19 @@
 # See https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
 set -Eeuo pipefail
 
-# Remove first output directory, if it exists
-rm -rf output1
-
 # Job 0
 rm -rf output_test
-
+# TODO: CHANGE SMALL_INPUT TO INPUT
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
-  -input input \
+  -input small_input \
   -output output_test \
   -mapper ./map0.py \
   -reducer ./reduce0.py \
 
 # Job 1
 rm -rf small_output1
-# TODO: CHANGE SMALL_INPUT TO INPUT
+
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
   -input small_input \
@@ -37,6 +34,7 @@ hadoop \
   -mapper ./map1.py \
   -reducer ./reduce1.py \
 
+# Job 2
 rm -rf small_output2
 
 hadoop \
@@ -44,4 +42,14 @@ hadoop \
   -input small_output1 \
   -output small_output2 \
   -mapper ./map2.py \
-  -reducer ./reduce2.py
+  -reducer ./reduce2.py \
+
+# Job 3
+rm -rf small_output3
+
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input small_output2 \
+  -output small_output3 \
+  -mapper ./map3.py \
+  -reducer ./reduce3.py

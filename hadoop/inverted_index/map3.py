@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Map 3 outputs <doc_id> <term x> <freq of x in doc> <# docs containing term x>..."""
+"""Map 3 outputs <doc_id> <term x> <freq> <# docs containing term x>..."""
 
 import sys
 
@@ -15,20 +15,18 @@ for line in sys.stdin:
 
     input_dict[doc_id] = {}
 
-    for idx, ele in enumerate(terms):
-      # even - term
-      if idx % 2 == 0:
-        term = terms[idx]
-        count = terms[idx + 1]
+    for idx in range(0, len(terms), 2):
+      term = terms[idx]
+      count = terms[idx + 1]
 
-        # add to input_dict
-        input_dict[doc_id][term] = count
+      # add to input_dict
+      input_dict[doc_id][term] = count
 
-        # add to term_dict
-        if term in term_dict:
-          term_dict[term] += 1
-        else:
-          term_dict[term] = 1
+      # add to term_dict
+      if term in term_dict:
+        term_dict[term] += 1
+      else:
+        term_dict[term] = 1
 
 # formatting for printing
 for doc_id in input_dict:

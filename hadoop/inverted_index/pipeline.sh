@@ -15,32 +15,32 @@
 set -Eeuo pipefail
 
 # Job 0
-rm -rf output_test
-# TODO: CHANGE SMALL_INPUT TO INPUT
+rm -rf output0
+
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
-  -input small_input \
-  -output output_test \
+  -input input \
+  -output output0 \
   -mapper ./map0.py \
   -reducer ./reduce0.py \
 
 # Job 1
-rm -rf small_output1
+rm -rf output
 
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
-  -input small_input \
-  -output small_output1 \
+  -input input \
+  -output output \
   -mapper ./map1.py \
   -reducer ./reduce1.py \
 
 # Job 2
-rm -rf small_output2
+rm -rf output2
 
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
-  -input small_output1 \
-  -output small_output2 \
+  -input output \
+  -output output2 \
   -mapper ./map2.py \
   -reducer ./reduce2.py \
 
@@ -49,7 +49,30 @@ rm -rf small_output3
 
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \
-  -input small_output2 \
-  -output small_output3 \
+  -input output2 \
+  -output output3 \
   -mapper ./map3.py \
   -reducer ./reduce3.py
+
+# Job 4
+rm -rf output4
+
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input output3 \
+  -output output4 \
+  -mapper ./map4.py \
+  -reducer ./reduce4.py
+
+# Job 5
+rm -rf output5
+
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input output4 \
+  -output output5 \
+  -mapper ./map5.py \
+  -reducer ./reduce5.py
+
+# concatenate all output files
+cat output5/* > inverted_index.txt

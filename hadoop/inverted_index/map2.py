@@ -10,7 +10,8 @@ stopwords = []
 for line in stopwords_file:
   word = re.sub(r'[^a-zA-Z0-9]+', '', line)
   stopwords.append(word)
-
+  
+stopwords_file.close()
 
 for line in sys.stdin:
   words = line.split()

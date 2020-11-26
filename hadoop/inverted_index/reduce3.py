@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
-"""Reduce 3 outputs <doc_id> <term x> <freq of x in doc> <idf>..."""
-
+"""Reduce 3 outputs <doc_id> <term x> <freq> <# docs containing term>..."""
 import sys
-from math import log
 
-
-# import total number of docs (from job 0)
-doc_count_file = open("total_document_count.txt", "r")
-total_docs = float(doc_count_file.readline())
-
-idf_dict = {}
+input_dict = {}
+term_dict = {}  # number of docs containing each term
 
 for line in sys.stdin:
   words = line.split()
@@ -17,21 +11,27 @@ for line in sys.stdin:
     doc_id = words[0]
     terms = words[1:]
 
+    input_dict[doc_id] = {}
+
     for idx in range(0, len(terms), 3):
       term = terms[idx]
-      freq = terms[idx + 1]
-      num_docs = terms[idx + 2]
+      freq = int(terms[idx + 1])
+      count = int(terms[idx + 2])
 
-      # either refer to or add to idf_dict
-      if term in idf_dict:
-        idf = idf_dict[term]
+      if term in term_dict:
+        term_dict[term] += count
       else:
-        div = float(total_docs/float(num_docs))
-        idf = log(div, 10)
-        idf_dict[term] = idf
-
-      # replace num of docs with idf
-      terms[idx + 2] = str(idf)
+        term_dict[term] = count
       
-    # format for printing - by line
-    print(doc_id + '\t' + ' '.join(terms))
+      input_dict[doc_id][term] = freq
+
+# formatting for printing
+for doc_id in input_dict:
+  term_freqs = []
+  for term in input_dict[doc_id]:
+    term_freqs.append(term)  # term
+    term_freqs.append(str(input_dict[doc_id][term]))  # freq in this doc
+    term_freqs.append(str(term_dict[term]))  # number of docs containing term
+
+  print(doc_id + '\t' + ' '.join(term_freqs))
+

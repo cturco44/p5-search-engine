@@ -74,5 +74,26 @@ hadoop \
   -mapper ./map5.py \
   -reducer ./reduce5.py
 
+
+# Job 6
+rm -rf output6
+
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input output5 \
+  -output output6 \
+  -mapper ./map6.py \
+  -reducer ./reduce6.py
+
+# Job 7
+rm -rf output7
+
+hadoop \
+  jar ../hadoop-streaming-2.7.2.jar \
+  -input output6 \
+  -output output7 \
+  -mapper ./map7.py \
+  -reducer ./reduce7.py \
+
 # concatenate all output files
-cat output5/* > inverted_index.txt
+cat output7/* > inverted_index.txt

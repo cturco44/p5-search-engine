@@ -1,49 +1,42 @@
 #!/usr/bin/env python3
-"""Map 5 outputs <term> <idf> <doc_id> <freq in doc> <norm factor of doc>..."""
+
+"""<doc_id> <term> <freq> <idf>..."""
 
 import sys
 
-term_dict = {}
+doc_dict = {}
 
 for line in sys.stdin:
   words = line.split()
-  if len(words) > 0:
-    doc_id = words[0]
-    doc_norm_fact = words[1]
-    terms = words[2:]
+  term = words[0]
+  idf = float(words[1])
+  docs = words[2:]
 
-    for idx in range(0, len(terms), 3):
-      term = terms[idx]
-      freq = terms[idx + 1]
-      idf = terms[idx + 2]
+  for idx in range(0, len(docs), 2):
+    doc_id = docs[idx]
+    freq = int(docs[idx + 1])
 
-      # add term or doc to term_dict
+    new_term = {
+      "freq": freq,
+      "idf": idf
+    }
+
+    if doc_id in doc_dict:
+      doc_dict[doc_id][term] = new_term
+    else:
       new_doc = {
-        "freq": str(freq),
-        "norm": str(doc_norm_fact)
+        term: new_term
       }
 
-      if term in term_dict:
-        term_dict[term][doc_id] = new_doc
-      else:
-        new_term = {
-          "idf": str(idf),
-          doc_id: new_doc
-        }
+      doc_dict[doc_id] = new_doc
 
-        term_dict[term] = new_term
 
-# print
-for term in term_dict:
-  term_info = []
+for doc_id in doc_dict:
+  term_freqs = []
 
-  #term_info.append(term)
-  term_info.append(term_dict[term]["idf"])
-  
-  for doc_id in term_dict[term]:
-    if not doc_id == 'idf':
-      term_info.append(doc_id)
-      term_info.append(term_dict[term][doc_id]['freq'])
-      term_info.append(term_dict[term][doc_id]['norm'])
+  for term in doc_dict[doc_id]:
+    term_freqs.append(term)
+    term_freqs.append(str(doc_dict[doc_id][term]['freq']))
+    term_freqs.append(str(doc_dict[doc_id][term]['idf']))
 
-  print(term + '\t' + ' '.join(term_info))
+  print(doc_id + '\t' + ' '.join(term_freqs))

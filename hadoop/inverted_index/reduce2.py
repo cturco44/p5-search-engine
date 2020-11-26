@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reduce 2 outputs <doc_id> <term x> <freq of x in doc> <term y>..."""
+"""Reduce 2 outputs <doc_id> <term x> <freq> <term y>..."""
 
 import sys
 

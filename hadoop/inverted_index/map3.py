@@ -17,7 +17,7 @@ for line in sys.stdin:
 
     for idx in range(0, len(terms), 2):
       term = terms[idx]
-      count = terms[idx + 1]
+      count = int(terms[idx + 1])
 
       # add to input_dict
       input_dict[doc_id][term] = count
@@ -33,7 +33,7 @@ for doc_id in input_dict:
   term_freqs = []
   for term in input_dict[doc_id]:
     term_freqs.append(term)  # term
-    term_freqs.append(input_dict[doc_id][term])  # freq in this doc
+    term_freqs.append(str(input_dict[doc_id][term]))  # freq in this doc
     term_freqs.append(str(term_dict[term]))  # number of docs containing term
 
   print(doc_id + '\t' + ' '.join(term_freqs))

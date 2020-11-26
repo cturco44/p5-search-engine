@@ -19,7 +19,7 @@ for line in sys.stdin:
     for idx in range(0, len(terms), 3):
       term = terms[idx]
       freq = terms[idx + 1]
-      num_docs = terms[idx + 2]
+      num_docs = int(terms[idx + 2])
 
       # either refer to or add to idf_dict
       if term in idf_dict:

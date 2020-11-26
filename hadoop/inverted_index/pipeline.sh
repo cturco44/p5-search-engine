@@ -45,7 +45,7 @@ hadoop \
   -reducer ./reduce2.py \
 
 # Job 3
-rm -rf small_output3
+rm -rf output3
 
 hadoop \
   jar ../hadoop-streaming-2.7.2.jar \

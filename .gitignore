@@ -69,3 +69,5 @@ files_for_autograder_io/
 # Google Drive and Dropbox
 Icon
 .dropbox*
+
+hadoop/inverted_index/output*/

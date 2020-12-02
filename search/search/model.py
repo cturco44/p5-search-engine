@@ -3,7 +3,6 @@ import sqlite3
 import flask
 import search
 
-
 def dict_factory(cursor, row):
     """Convert database row objects to a dictionary keyed on column name.
 

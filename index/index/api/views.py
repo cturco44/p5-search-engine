@@ -26,7 +26,7 @@ def get_hits():
     query = flask.request.args.get('q')
 
     context = {"hits": []}
-    queries = [word for word in query.split("+") if word not in stopwords]
+    queries = ["".join(filter(str.isalnum(), word)) for word in query.split("+") if word not in stopwords]
     counts = Counter(queries)
     q_vec = []
     s = set() # doc_ids that contain all words in queries
@@ -45,7 +45,7 @@ def get_hits():
 
     squared_sum = sum([x**2 for x in q_vec])
     norm_q = sqrt(squared_sum)
-
+    tmp = [] #(weighted_score * -1, doc_id)
     for doc in s:
         d_vec = []
         norm_d = None
@@ -58,8 +58,11 @@ def get_hits():
                 norm_d = sqrt(norm_d_squared)
         tfidf = np.dot(q_vec, d_vec) / (norm_q * norm_d)
         weighted_score = weight * pagerank[doc] + (1 - weight) * tfidf
-        #TODO  add doc_id and score to hits, remember to sort by score desc, doc_id asc 
-
+        tmp.append((-1*weighted_score, doc))
+    tmp.sort()
+    for data in tmp:
+        context["hits"].append({"docid": data[1], "score": (data[0] * -1)})
+    return flask.jsonify(**context)
 
 def get_stopwords():
     stopwords = set()

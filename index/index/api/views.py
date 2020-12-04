@@ -16,8 +16,14 @@ def get_hits():
     # print("weight: ", weight)
     # print("query: ", query)
     context = {"hits": []}
-    queries = [ "".join(filter(str.isalnum, word)) for word in query.split(" ") if word not in index.stopwords]
-    # print(queries)
+    queries = []
+    for word in query.split(" "):
+        if word not in index.stopwords:
+            tmp = "".join(filter(str.isalnum, word))
+            if tmp != '':
+                queries.append(tmp)
+    # queries = [ "".join(filter(str.isalnum, word)) for word in query.split(" ") if word not in index.stopwords]
+    print(queries)
     # print(inverted_index['armadillo'])
     counts = Counter(queries)
     q_vec = []

@@ -1,8 +1,8 @@
 import flask
 from flask import request, redirect, url_for
 import requests
+import json
 import search
-import pdb
 
 @search.app.route("/", methods=["GET"])
 def show_index():
@@ -14,68 +14,10 @@ def show_index():
         if q_string_param is None and w_decimal_param is None:
             return flask.render_template("index.html",results=[],nothing=False)
         
-        # parameters = {'q': q_string_param, 's': w_decimal_param}
-        # hits = requests.get("/api/v1/hits/", params=parameters)
-        
-        # TODO: Remove hardcoded array and convert hits to dict
-        # hits = {
-        #     "hits": []
-        # }
-        hits = {
-            "hits": [
-                {
-                    "docid": 23154957,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 3957342,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 32841952,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 46790,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 367154,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 634802,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 1329192,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 1757140,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 1191599,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 27593182,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 8783748,
-                    "score": 0.06573732
-                },
-                {
-                    "docid": 20994373,
-                    "score": 0.06573732
-                }
-                
-            ]
-        }
-        # Generate SQL query for posts in order
-        #pdb.set_trace()
+        parameters = { 'w': w_decimal_param,'q': q_string_param}
+        response = requests.get(search.config.INDEX_API_URL, params=parameters)
+        hits = response.json()
+
         connection = search.model.get_db()
         final = []
         if hits["hits"]:

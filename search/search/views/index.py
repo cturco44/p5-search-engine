@@ -6,10 +6,9 @@ import requests
 import search
 
 
-
 @search.app.route("/", methods=["GET"])
 def show_index():
-    """Main Index page."""
+    """Show main Index page."""
     q_string_param = request.args.get("q")
     w_decimal_param = request.args.get("w")
 

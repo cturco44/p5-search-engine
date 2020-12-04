@@ -1,8 +1,9 @@
 import flask
 from flask import request, redirect, url_for
 import requests
-import json
 import search
+import urllib
+import pdb
 
 @search.app.route("/", methods=["GET"])
 def show_index():
@@ -15,8 +16,11 @@ def show_index():
             return flask.render_template("index.html",results=[],nothing=False)
         
         parameters = { 'w': w_decimal_param,'q': q_string_param}
-        response = requests.get(search.config.INDEX_API_URL, params=parameters)
+        encoded_query = urllib.parse.urlencode(parameters)
+        final_url = search.app.config["INDEX_API_URL"] + '?' + encoded_query + '/'
+        response = requests.get(final_url)
         hits = response.json()
+
 
         connection = search.model.get_db()
         final = []

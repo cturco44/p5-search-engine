@@ -4,8 +4,7 @@ import index
 import numpy as np
 from collections import Counter
 from math import sqrt
-from index.api.utils import stopwords, pagerank, inverted_index
-
+from index.api.utils import *
 
 @index.app.route("/api/v1/", methods=["GET"])
 def get_dir():

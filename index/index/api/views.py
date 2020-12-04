@@ -1,16 +1,20 @@
 """REST API for available directories."""
-import flask
-import index
 from collections import Counter
 from math import sqrt
+import flask
+import index
+
 
 @index.app.route("/api/v1/", methods=["GET"])
 def get_dir():
+    """Get directory."""
     context = {"hits": "/api/v1/hits/", "url": "/api/v1/"}
     return flask.jsonify(**context)
 
+
 @index.app.route("/api/v1/hits/", methods=["GET"])
 def get_hits():
+    """Get hits."""
     weight = flask.request.args.get('w')
     query = flask.request.args.get('q')
     # print("weight: ", weight)
@@ -22,15 +26,16 @@ def get_hits():
             tmp = "".join(filter(str.isalnum, word))
             if tmp != '':
                 queries.append(tmp)
-    # queries = [ "".join(filter(str.isalnum, word)) for word in query.split(" ") if word not in index.stopwords]
+    # queries = [ "".join(filter(str.isalnum, word))
+    # for word in query.split(" ") if word not in index.stopwords]
     # print(queries)
     # print(inverted_index['armadillo'])
     if not queries:
         return flask.jsonify({"hits": []})
     counts = Counter(queries)
     q_vec = []
-    s = set() # doc_ids that contain all words in queries
-    q_unique = list(counts.keys()) # unique words in queries
+    s = set()  # doc_ids that contain all words in queries
+    q_unique = list(counts.keys())  # unique words in queries
     for word in q_unique:
         if word in index.inverted_index:
             if not s:
@@ -47,7 +52,7 @@ def get_hits():
             return flask.jsonify({"hits": []})
     squared_sum = sum([x**2 for x in q_vec])
     norm_q = sqrt(squared_sum)
-    tmp = [] #(weighted_score * -1, doc_id)
+    tmp = []  # (weighted_score * -1, doc_id)
     for doc in s:
         d_vec = []
         norm_d = None
@@ -60,9 +65,11 @@ def get_hits():
                 norm_d = sqrt(norm_d_squared)
         q_dot_d = sum(map(lambda x: x[0]*x[1], zip(q_vec, d_vec)))
         tfidf = q_dot_d / (norm_q * norm_d)
-        weighted_score = float(weight) * float(index.pagerank[doc]) + (1 - float(weight)) * tfidf
+        weighted_score = (float(weight) * float(index.pagerank[doc])
+                          + (1 - float(weight)) * tfidf)
         tmp.append((-1*weighted_score, doc))
     tmp.sort()
     for data in tmp:
-        context["hits"].append({"docid": int(data[1]), "score": (data[0] * -1)})
+        context["hits"].append({"docid": int(data[1]),
+                               "score": (data[0] * -1)})
     return flask.jsonify(**context)

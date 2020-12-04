@@ -1,7 +1,6 @@
 """REST API for available directories."""
 import flask
 import index
-import numpy as np
 from collections import Counter
 from math import sqrt
 from index.api.utils import *
@@ -52,7 +51,8 @@ def get_hits():
             if not norm_d:
                 norm_d_squared = float(inverted_index[word][1][doc][1])
                 norm_d = sqrt(norm_d_squared)
-        tfidf = np.dot(q_vec, d_vec) / (norm_q * norm_d)
+        q_dot_d = sum(map(lambda x: x[0]*x[1], zip(q_vec, d_vec)))
+        tfidf = q_dot_d / (norm_q * norm_d)
         weighted_score = float(weight) * float(pagerank[doc]) + (1 - float(weight)) * tfidf
         tmp.append((-1*weighted_score, doc))
     tmp.sort()

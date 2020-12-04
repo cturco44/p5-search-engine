@@ -1,7 +1,7 @@
 import pathlib
 import re
 
-index_package_dir = pathlib.Path(__file__).parent.parent
+index_package_dir = pathlib.Path(__file__).parent
 
 stopwords_filename = index_package_dir/"stopwords.txt"
 pagerank_filename = index_package_dir/"pagerank.out"

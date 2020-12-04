@@ -23,11 +23,13 @@ def get_hits():
             if tmp != '':
                 queries.append(tmp)
     # queries = [ "".join(filter(str.isalnum, word)) for word in query.split(" ") if word not in index.stopwords]
-    print(queries)
+    # print(queries)
     # print(inverted_index['armadillo'])
+    if not queries:
+        return flask.jsonify({"hits": []})
     counts = Counter(queries)
     q_vec = []
-    s = None # doc_ids that contain all words in queries
+    s = set() # doc_ids that contain all words in queries
     q_unique = list(counts.keys()) # unique words in queries
     for word in q_unique:
         if word in index.inverted_index:

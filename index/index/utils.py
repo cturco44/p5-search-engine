@@ -1,4 +1,4 @@
-"""Utils file for index server."""
+"""Reads stopwords, pagerank, inverted_index into memory."""
 import pathlib
 import re
 
@@ -10,49 +10,48 @@ inverted_index_filename = index_package_dir/"inverted_index.txt"
 
 
 def get_stopwords():
-    """Get stopwords from stopwords.txt file."""
-    stopwords_set = set()
+    """Read stopwords."""
+    stop = set()
     with open(stopwords_filename, "r") as stopwords_file:
         for line in stopwords_file:
             word = re.sub(r'[^a-zA-Z0-9]+', '', line)
-            stopwords_set.add(word)
-    return stopwords_set
+            stop.add(word)
+    return stop
 
 
 def get_pagerank():
-    """Get PageRank from pagerank.out file."""
-    pagerank_dict = {}
+    """Read pagerank."""
+    rank = {}
     with open(pagerank_filename, "r") as pr_file:
         for line in pr_file:
             line = line.strip()
             data = line.split(',')
-            pagerank_dict[data[0]] = data[1]
-            # data[0] == doc_id, data[1] == pagerank_dict(doc_id)
-    return pagerank_dict
+            rank[int(data[0])] = float(data[1])
+            # data[0] == doc_id, data[1] == pagerank(doc_id)
+    return rank
 
 
 def get_inverted_index():
-    """Get inverted index from inverted_index.txt file."""
-    inverted_index_dict = {}
-    # {term: [idf, {doc_id: [freq in doc, squared norm factor]}]}
+    """Read inverted_index."""
+    index = {}  # {term: [idf, {doc_id: [freq in doc, squared norm factor]}]}
     with open(inverted_index_filename, "r") as idx:
         for line in idx:
             line = line.strip()
             data = line.split(" ")
             term = data[0]
-            idf = data[1]
-            inverted_index_dict[term] = [idf]
+            idf = float(data[1])
+            index[term] = [idf]
             freqs = {}
             for i in range(2, len(data)):
                 if (i - 2) % 3 == 0:
-                    doc_id = data[i]
+                    doc_id = int(data[i])
                 elif (i - 2) % 3 == 1:
-                    freq = data[i]
+                    freq = int(data[i])
                 else:
-                    norm = data[i]
+                    norm = float(data[i])
                     freqs[doc_id] = [freq, norm]
-            inverted_index_dict[term].append(freqs)
-    return inverted_index_dict
+            index[term].append(freqs)
+    return index
 
 
 stopwords = get_stopwords()

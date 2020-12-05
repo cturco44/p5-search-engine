@@ -17,12 +17,12 @@ def get_hits():
     weight = float(flask.request.args.get('w'))
     queries = []
     for word in flask.request.args.get('q').split(" "):
-        if word not in index.stopwords:
+        if "".join(filter(str.isalnum, word.lower())) not in index.stopwords:
             queries.append("".join(filter(str.isalnum, word.lower())))
 
-    queries = [x for x in queries if x != '']
-    if not queries:
-        return flask.jsonify({"hits": []})
+    # queries = [x for x in queries if x != '']
+    # if not queries:
+    #     return flask.jsonify({"hits": []})
     q_vec = []
     docs = set()  # doc_ids that contain all words in queries
     q_unique = list(set(queries))  # unique words in queries

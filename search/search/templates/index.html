@@ -5,10 +5,10 @@
         <h1>Search Engine</h1>
         <form action="/" method="GET">
             <p><input type="text" name="q"/></p>
-            <p><input type="range" name="w" min="0" max="1" value="0" step="0.1"/></p>
+            <p><input type="range" name="w" min="0" max="1" value="0" step="0.01"/></p>
             <input type="submit" value="Search"/>
           </form>
-        
+
         <p></p>
         {% for item in results %}
         <p class="doc_title">{{item['title']}}</p>
